@@ -382,7 +382,7 @@ async function signHash512(thumbprint, hash, signOption = CAPICOM_CERTIFICATE_IN
  * @throws {Error}
  * @description добавление параллельной подписи (Гост 3411_2012_512)
  */
- async function coSignHash512(thumbprint, hash, signature, signOption = CAPICOM_CERTIFICATE_INCLUDE_WHOLE_CHAIN) {
+async function coSignHash512(thumbprint, hash, signature, signOption = CAPICOM_CERTIFICATE_INCLUDE_WHOLE_CHAIN) {
   try {
     if (!thumbprint) {
       throw new Error('Не указано thumbprint значение сертификата');
@@ -431,7 +431,7 @@ async function signHash512(thumbprint, hash, signOption = CAPICOM_CERTIFICATE_IN
  * @throws {Error}
  * @description подпись хэш-суммы файла (Гост 3411_2012_256)
  */
- async function signHash256(thumbprint, hash, signOption = CAPICOM_CERTIFICATE_INCLUDE_WHOLE_CHAIN) {
+async function signHash256(thumbprint, hash, signOption = CAPICOM_CERTIFICATE_INCLUDE_WHOLE_CHAIN) {
   try {
     if (!thumbprint) {
       throw new Error('Не указано thumbprint значение сертификата');
@@ -477,7 +477,7 @@ async function signHash512(thumbprint, hash, signOption = CAPICOM_CERTIFICATE_IN
  * @throws {Error}
  * @description добавление параллельной подписи (Гост 3411_2012_256)
  */
- async function coSignHash256(thumbprint, hash, signature, signOption = CAPICOM_CERTIFICATE_INCLUDE_WHOLE_CHAIN) {
+async function coSignHash256(thumbprint, hash, signature, signOption = CAPICOM_CERTIFICATE_INCLUDE_WHOLE_CHAIN) {
   try {
     if (!thumbprint) {
       throw new Error('Не указано thumbprint значение сертификата');
@@ -543,6 +543,34 @@ async function getHash(base64) {
   }
 }
 
+/**
+ * @async
+ * @function getHash256
+ * @param {String} base64 строка в формате base64
+ * @throws {Error}
+ * @description получение хэш значения данных в base64 по алгоритму GOST_3411_2012_256
+ */
+async function getHash256(base64) {
+  try {
+    // Создаем объект CAdESCOM.HashedData
+    const oHashedData = await cadescomMethods.oHashedData();
+
+    // Алгоритм хэширования нужно указать до того, как будут переданы данные
+    await oHashedData.propset_Algorithm(CADESCOM_HASH_ALGORITHM_CP_GOST_3411_2012_256);
+
+    // Указываем кодировку данных
+    // Кодировка должна быть указана до того, как будут переданы сами данные
+    await oHashedData.propset_DataEncoding(CADESCOM_BASE64_TO_BINARY);
+
+    // Передаем данные
+    await oHashedData.Hash(base64);
+
+    // Получаем хэш-значение
+    return await oHashedData.Value;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
 /**
  * @async
  * @function getSignatureInfo
