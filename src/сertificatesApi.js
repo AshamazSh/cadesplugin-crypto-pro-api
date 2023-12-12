@@ -702,6 +702,7 @@ export {
   verifyBase64,
   getSignatureInfo,
   getHash,
+  getHash256,
   signHash256,
   signHash512,
   coSignHash512,
